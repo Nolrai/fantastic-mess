@@ -14,17 +14,36 @@ def Op [partial_order E] : partial_order E :=
 , le_antisymm := λ a b a_ge_b b_ge_a, le_antisymm b_ge_a a_ge_b
 }
 
+section definitions2
 variables {E}
 variables (S T : set E)
 
 def upper_bounds_of [partial_order E] : set E := λ x, ∀ y ∈ S, y ≤ x
 def lower_bounds_of [partial_order E] : set E := λ x, ∀ y ∈ S, y ≥ x
-def is_max_ [partial_order E] : set E := λ x, (x ∈ upper_bounds_of S) ∧ x ∈ S
-def is_min_ [partial_order E] : set E := λ x, (x ∈ lower_bounds_of S) ∧ x ∈ S
-notation x `is_max_of` S := is_max_ S x
-notation x `is_min_of` S := is_min_ S x
+def is_max [partial_order E] : set E := λ x, (x ∈ upper_bounds_of S) ∧ x ∈ S
+def is_min [partial_order E] : set E := λ x, (x ∈ lower_bounds_of S) ∧ x ∈ S
+notation S `max_is` x := is_max S x
+notation S `min_is` x := is_min S x
 
-def is_join [partial_order E] : set E := λ x, x is_min_of (upper_bounds_of S)
-def is_meet [partial_order E] : set E := λ x, x is_max_of (lower_bounds_of S)
+def is_join [partial_order E] : set E := λ x, (upper_bounds_of S) min_is x
+def is_meet [partial_order E] : set E := λ x, (lower_bounds_of S) min_is x
+end definitions2
+
+def upair (x y : E) : set E := λ s, s = x ∨ s = y
+
+class lattice E extends partial_order E :=
+(top : E)
+(bottom : E)
+
+(join : E -> E -> E)
+(meet : E -> E -> E)
+
+(top_spec : is_meet ∅ top)
+(bottom_spec : is_join ∅ top)
+
+(join_spec : )
+
+
+end definitions2
 
 end definitions
